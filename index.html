@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Batalha Naval</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/shipOnClick.js"></script>
+</head>
+<body class="items-center">
+<table id="naval" class="w-[300px] mt-[50px]" border="1" cellpadding="0" cellspacing="0" align="center">
+
+    <script>
+
+        const boats = [
+            [getRandomInt(), getRandomInt()],
+            [getRandomInt(), getRandomInt()],
+            [getRandomInt(), getRandomInt()]
+        ]
+
+        let score = 0;
+        let life = 3;
+        const page = document.getElementById('naval')
+        let quant_boats = 3;
+
+        console.log(boats)
+
+        for(let line = 1; line <= 5; line++){
+            document.write("<tr>");
+            for(let tile = 1; tile <= 5; tile++){
+                document.write(
+                    `<td class='w-[300px]' id='ship-${line}-${tile}' onclick='shipOnClick(${line}, ${tile})'>
+                       <img src='img/water.png' class="w-[50px]">
+                    </td>`
+                );
+            }
+            document.write("</tr>");
+        }
+
+
+        function shipOnClick(line, tile){
+            let ship = document.getElementById('ship-' + line + '-' + tile);
+            let found = false;
+
+            for(let boat of boats){
+
+                if(boat[0] == line && boat[1] == tile){
+                    if(ship.innerHTML === `<img src="img/boat.png" class="w-[50px] h-[50px]">` )
+                    {
+                        console.log("Already selected.");
+                    }
+                    else {
+                        ship.innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
+                        score +=1;
+                        quant_boats -= 1;
+                        console.log("Score: ", score);
+
+                    }
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                if (ship.innerHTML === `<img src="img/tnt.png" class="w-[50px] h-[50px]">`){
+                    console.log('Already selected.')
+                }
+                else
+                {
+                    ship.innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                    life -= 1;
+                    console.log("Lives:", life)
+
+                }
+
+            }
+
+            if (life <= 0){
+                page.innerHTML = `<div class="grid justify-center items-center"> <h1>Game Over</h1><p>Score: ${score}</p><button onclick="window.location.reload()" class="bg-blue-500 rounded-lg text-white">Retry</button>`
+            }
+
+            if (quant_boats <= 0){
+                page.innerHTML = `<div class="grid justify-center items-center"> <h1>You win.</h1><p>Boats destroyed: ${score}</p><button onclick="window.location.reload()"><p class="bg-blue-500  rounded-lg text-white">Retry</p></button>`
+
+            }
+        }
+
+        function getRandomInt() {
+            return Math.floor(Math.random() * 5) + 1;
+        }
+    </script>
+</table>
+</body>
+</html>
