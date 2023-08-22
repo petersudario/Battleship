@@ -58,6 +58,9 @@
             if (tipoBomba == 1){
                 tiroBomba(line, tile, boats, found, ship)
             }
+            if (tipoBomba == 2){
+                tiroAtomico(line, tile, boats, found, ship)
+            }
 
             if (life <= 0){
                 page.innerHTML = `<div class="grid justify-center items-center"> <h1>Game Over</h1><p>Score: ${score}</p><button onclick="window.location.reload()" class="bg-blue-500 rounded-lg text-white">Retry</button>`
@@ -121,6 +124,53 @@
                         console.log("Already selected.");
                     }
                     else {
+
+                        document.getElementById('ship-' + line + '-' + tile).innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line - 1) + '-' + tile).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line + 1) + '-' + tile).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + line + '-' + (tile - 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + line + '-' + (tile + 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        score +=1;
+                        quant_boats -= 1;
+                        console.log("Score: ", score);
+
+                    }
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                if (ship.innerHTML === `<img src="img/tnt.png" class="w-[50px] h-[50px]">`){
+                    console.log('Already selected.')
+                }
+                else
+                {
+                    ship.innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                    life -= 1;
+                    console.log("Lives:", life)
+
+                }
+
+            }
+        }
+
+        function tiroAtomico(line, tile, boats, found, ship){
+            for(let boat of boats){
+
+                if(boat[0] === line && boat[1] === tile){
+                    if(ship.innerHTML === `<img src="img/boat.png" class="w-[50px] h-[50px]">` )
+                    {
+                        console.log("Already selected.");
+                    }
+                    else {
+
+                        document.getElementById('ship-' + (line - 1) + '-' + (tile - 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line - 1) + '-' + (tile + 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line + 1) + '-' + (tile - 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line + 1) + '-' + (tile + 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+
+
 
                         document.getElementById('ship-' + line + '-' + tile).innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
                         document.getElementById('ship-' + (line - 1) + '-' + tile).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
