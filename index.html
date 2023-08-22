@@ -6,9 +6,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="items-center">
+
+<select id="opcoes" onchange="opcaoSelecionada()">
+    <option value="0" selected>Tiro simples</option>
+    <option value="1">Bomba</option>
+    <option value="2">Bomba atômica</option>
+
+</select>
 <table id="naval" class="w-[300px] mt-[50px]" border="1" cellpadding="0" cellspacing="0" align="center">
 
     <script>
+
+        let tipoBomba = 0;
 
         const boats = [
             [getRandomInt(), getRandomInt()],
@@ -16,16 +25,18 @@
             [getRandomInt(), getRandomInt()]
         ]
 
+
+
         let score = 0;
-        let life = 3;
+        let life = 7;
         const page = document.getElementById('naval')
         let quant_boats = 3;
 
         console.log(boats)
 
-        for(let line = 1; line <= 5; line++){
+        for(let line = 1; line <= 8; line++){
             document.write("<tr>");
-            for(let tile = 1; tile <= 5; tile++){
+            for(let tile = 1; tile <= 12; tile++){
                 document.write(
                     `<td class='w-[300px]' id='ship-${line}-${tile}' onclick='shipOnClick(${line}, ${tile})'>
                        <img src='img/water.png' class="w-[50px]">
@@ -39,16 +50,83 @@
         function shipOnClick(line, tile){
             let ship = document.getElementById('ship-' + line + '-' + tile);
             let found = false;
+            console.log(tipoBomba)
 
+            if(tipoBomba == 0){
+                tiroSimples(line, tile, boats, found, ship);
+            }
+            if (tipoBomba == 1){
+                tiroBomba(line, tile, boats, found, ship)
+            }
+
+            if (life <= 0){
+                page.innerHTML = `<div class="grid justify-center items-center"> <h1>Game Over</h1><p>Score: ${score}</p><button onclick="window.location.reload()" class="bg-blue-500 rounded-lg text-white">Retry</button>`
+            }
+
+            if (quant_boats <= 0){
+                page.innerHTML = `<div class="grid justify-center items-center"> <h1>You win.</h1><p>Boats destroyed: ${score}</p><button onclick="window.location.reload()"><p class="bg-blue-500  rounded-lg text-white">Retry</p></button>`
+
+            }
+        }
+
+        function getRandomInt() {
+            return Math.floor(Math.random() * 8) + 1;
+        }
+
+        function tiroSimples(line, tile, boats, found, ship){
             for(let boat of boats){
 
-                if(boat[0] == line && boat[1] == tile){
+                if(boat[0] === line && boat[1] === tile){
                     if(ship.innerHTML === `<img src="img/boat.png" class="w-[50px] h-[50px]">` )
                     {
                         console.log("Already selected.");
                     }
                     else {
-                        ship.innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
+
+
+                        document.getElementById('ship-' + line + '-' + tile).innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
+                        score +=1;
+                        quant_boats -= 1;
+                        console.log("Score: ", score);
+                        alert("Você acertou um barco!")
+
+                    }
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found){
+                if (ship.innerHTML === `<img src="img/tnt.png" class="w-[50px] h-[50px]">`){
+                    console.log('Already selected.')
+                }
+                else
+                {
+                    ship.innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                    life -= 1;
+                    console.log("Lives:", life)
+                    alert("Você acertou uma mina aquática.")
+
+                }
+
+            }
+        }
+
+        function tiroBomba(line, tile, boats, found, ship){
+            for(let boat of boats){
+
+                if(boat[0] === line && boat[1] === tile){
+                    if(ship.innerHTML === `<img src="img/boat.png" class="w-[50px] h-[50px]">` )
+                    {
+                        console.log("Already selected.");
+                    }
+                    else {
+
+                        document.getElementById('ship-' + line + '-' + tile).innerHTML = `<img src="img/boat.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line - 1) + '-' + tile).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + (line + 1) + '-' + tile).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + line + '-' + (tile - 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
+                        document.getElementById('ship-' + line + '-' + (tile + 1)).innerHTML = `<img src="img/tnt.png" class="w-[50px] h-[50px]">`;
                         score +=1;
                         quant_boats -= 1;
                         console.log("Score: ", score);
@@ -72,21 +150,17 @@
                 }
 
             }
-
-            if (life <= 0){
-                page.innerHTML = `<div class="grid justify-center items-center"> <h1>Game Over</h1><p>Score: ${score}</p><button onclick="window.location.reload()" class="bg-blue-500 rounded-lg text-white">Retry</button>`
-            }
-
-            if (quant_boats <= 0){
-                page.innerHTML = `<div class="grid justify-center items-center"> <h1>You win.</h1><p>Boats destroyed: ${score}</p><button onclick="window.location.reload()"><p class="bg-blue-500  rounded-lg text-white">Retry</p></button>`
-
-            }
         }
 
-        function getRandomInt() {
-            return Math.floor(Math.random() * 5) + 1;
+        function opcaoSelecionada(){
+
+            let currentOption = document.getElementById('opcoes')
+
+            tipoBomba = currentOption.value
+
         }
     </script>
-</table>
+
+
 </body>
 </html>
